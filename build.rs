@@ -12,7 +12,7 @@ fn main() {
         "cargo:rustc-link-search=native={}",
         Path::new(&dir).join("StormLib").display()
     );
-    println!("cargo:rustc-link-lib=storm");
+    println!("cargo:rustc-link-lib=static=storm");
     println!("cargo:rustc-link-lib=bz2");
     println!("cargo:rustc-link-lib=z");
     println!("cargo:rustc-link-lib=stdc++");
