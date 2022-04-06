@@ -3,8 +3,26 @@ extern crate bindgen;
 use std::env;
 use std::path::Path;
 use std::path::PathBuf;
+use std::process::Command;
 
 fn main() {
+    Command::new("cmake")
+    .current_dir("StormLib")
+    .args(&["CMakeLists.txt"])
+    .status()
+    .expect("failed to cmake");
+
+    Command::new("make")
+    .current_dir("StormLib")
+    // .env("LUA_DIR", lua_dir)
+    .status()
+    .expect("failed to make!");
+
+    // Tell cargo to invalidate the built crate whenever the wrapper changes
+    println!("cargo:rerun-if-changed=src/wrapper.hpp");
+    println!("cargo:rerun-if-changed=StormLib");
+    println!("cargo:rerun-if-changed=StormLib/libstorm.a");
+
     // Tell cargo to tell rustc to link the system bzip2
     // shared library.
     let dir = env::var("CARGO_MANIFEST_DIR").unwrap();
