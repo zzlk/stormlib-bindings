@@ -71,7 +71,7 @@ fn main() {
     println!("cargo:rustc-link-lib=static=storm");
     println!("cargo:rustc-link-lib=static=bz2_static");
     println!("cargo:rustc-link-lib=static=z");
-    println!("cargo:rustc-link-lib=static=stdc++");
+    println!("cargo:rustc-link-lib=stdc++");
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
     println!("cargo:rerun-if-changed=src/wrapper.hpp");
