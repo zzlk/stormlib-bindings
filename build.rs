@@ -7,18 +7,45 @@ use std::process::Command;
 
 fn main() {
     assert!(Command::new("cmake")
-    .current_dir("StormLib")
-    .args(&["CMakeLists.txt"])
-    .status()
-    .expect("failed to cmake")
-    .success());
+        .current_dir("StormLib")
+        .args(&["CMakeLists.txt"])
+        .status()
+        .expect("failed to cmake")
+        .success());
 
     assert!(Command::new("make")
-    .current_dir("StormLib")
-    // .env("LUA_DIR", lua_dir)
-    .status()
-    .expect("failed to make!")
-    .success());
+        .current_dir("StormLib")
+        // .env("LUA_DIR", lua_dir)
+        .status()
+        .expect("failed to make!")
+        .success());
+
+    assert!(Command::new("cmake")
+        .current_dir("bzip2")
+        .args(&["CMakeLists.txt", "-DENABLE_STATIC_LIB=1"])
+        .status()
+        .expect("failed to cmake")
+        .success());
+
+    assert!(Command::new("make")
+        .current_dir("bzip2")
+        // .env("LUA_DIR", lua_dir)
+        .status()
+        .expect("failed to make!")
+        .success());
+
+    assert!(Command::new("/bin/sh")
+        .current_dir("zlib")
+        .args(&["./configure"])
+        .status()
+        .expect("failed to configure")
+        .success());
+
+    assert!(Command::new("make")
+        .current_dir("zlib")
+        .status()
+        .expect("failed to make!")
+        .success());
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
     println!("cargo:rerun-if-changed=src/wrapper.hpp");
@@ -32,10 +59,19 @@ fn main() {
         "cargo:rustc-link-search=native={}",
         Path::new(&dir).join("StormLib").display()
     );
+    println!(
+        "cargo:rustc-link-search=native={}",
+        Path::new(&dir).join("bzip2").display()
+    );
+    println!(
+        "cargo:rustc-link-search=native={}",
+        Path::new(&dir).join("zlib").display()
+    );
+    println!("cargo:rustc-link-search=native=vendor");
     println!("cargo:rustc-link-lib=static=storm");
-    println!("cargo:rustc-link-lib=bz2");
-    println!("cargo:rustc-link-lib=z");
-    println!("cargo:rustc-link-lib=stdc++");
+    println!("cargo:rustc-link-lib=static=bz2_static");
+    println!("cargo:rustc-link-lib=static=z");
+    println!("cargo:rustc-link-lib=static=stdc++");
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
     println!("cargo:rerun-if-changed=src/wrapper.hpp");
