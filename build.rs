@@ -49,7 +49,7 @@ fn main() {
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
     println!("cargo:rerun-if-changed=src/wrapper.hpp");
-    println!("cargo:rerun-if-changed=StormLib");
+    // println!("cargo:rerun-if-changed=StormLib"); this causes incremental build to not work, it's overly sensitive.
     println!("cargo:rerun-if-changed=StormLib/libstorm.a");
 
     // Tell cargo to tell rustc to link the system bzip2
